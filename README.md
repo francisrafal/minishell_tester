@@ -15,4 +15,4 @@ python3 minishell_tester.py <absolute_path_to_minishell> <prompt in quotes, i.e.
 ```
 
 ## Adding Tests
-Add commands in the minishell_tester.py file to the list `testcmds`
+Add commands in the `minishell_tester.py` file to the list `testcmds`
