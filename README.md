@@ -13,3 +13,6 @@ cd minishell_tester
 ```
 python3 minishell_tester.py <absolute_path_to_minishell> <prompt in quotes, i.e. "minishell $"> [test number to execute, i.e. 1]
 ```
+
+## Adding Tests
+Add commands in the minishell_tester.py file to the list `testcmds`
