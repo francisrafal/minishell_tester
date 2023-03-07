@@ -34,7 +34,8 @@ echo "try to add alias in file: $RC_FILE"
 
 if ! grep "minishell_tester=" $RC_FILE &> /dev/null; then
 	echo "minishell_tester alias not present"
-	echo "\nalias minishell_tester=$HOME/minishell_tester/execute_tests.sh" >> $RC_FILE
+	echo >> $RC_FILE
+	echo "alias minishell_tester=$HOME/minishell_tester/execute_tests.sh" >> $RC_FILE
 fi
 
 exec "$SHELL"
