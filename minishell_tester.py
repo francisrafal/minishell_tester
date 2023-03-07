@@ -36,8 +36,10 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-PROMPT = sys.argv[2]
+PROMPT = sys.argv[1]
 TESTLOGPATH = os.path.expandvars("$HOME") + "/minishell_tester/testlogs/"
+MINISHELLPATH = "./minishell"
+ARGC = len(sys.argv)
 
 def referenceresult(minishell, bash_result):
     try:
@@ -58,7 +60,7 @@ def get_bash_result(bash, cmd):
     return bash.before.decode()
 
 def test(cmdlist, testnum):
-    minishell = pexpect.spawn(sys.argv[1])
+    minishell = pexpect.spawn(MINISHELLPATH)
     minishell_logfile = TESTLOGPATH + str(testnum).zfill(3) + "_testoutput_minishell.log"
     minishell.logfile_read = open(minishell_logfile, "wb")
 
@@ -79,13 +81,31 @@ def test(cmdlist, testnum):
     minishell.sendline("exit")
     bash.sendline("exit")
 
-def main():
+def print_welcome():
     print(bcolors.UNDERLINE + bcolors.BOLD + bcolors.OKBLUE + "\nminishell Tester\n" + bcolors.ENDC)
     print("All results will be compared to your machine's bash")
     print("Test logs can be found in $HOME/minishell_tester/testlogs")
+
+def print_usage():
+    print("Usage: minishell_tester '<prompt_in_single_quotes>' [testnumber]")
+    print("Example: Execute All Tests")
+    print("minishell_tester 'minishell$ '")
+    print("Example: Execute Only Test No. 5")
+    print("minishell_tester 'minishell$ ' 5")
+
+def build_minishell():
+    pexpect.run("pwd")
+    # print(bcolors.HEADER + "Executing your Makefile..." + bcolors.ENDC)
+    # pexpect.run("make")
+          
+def main():
+    if ARGC == 1 or ARGC > 3:
+        print_usage()
+    print_welcome()
+    build_minishell()
     os.makedirs(TESTLOGPATH, exist_ok=True)
-    if len(sys.argv) > 3:
-        test(TESTCMDS[int(sys.argv[3])], int(sys.argv[3]))
+    if ARGC > 2:
+        test(TESTCMDS[int(sys.argv[2])], int(sys.argv[2]))
     else:
         for testnum, cmdlist in enumerate(TESTCMDS):
             test(cmdlist, testnum)
