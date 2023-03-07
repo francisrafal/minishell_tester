@@ -1,5 +1,7 @@
 # minishell_tester
 Testing Suite For The minishell Project Of The 42 Core Curriculum
+minishell_tester provides a list of test commands in a Python script and executes them simultaenously with your minishell and bash to compare the results.
+The test outputs of each command are saved in separate log files.
 
 # Installation
 ```
@@ -23,4 +25,4 @@ minishell_tester /home/francisrafal/minishell/minishell "minishell$ " 5
 ```
 
 ## Adding Tests
-Add commands in the `$HOME/minishell_tester/minishell_tester.py` file to the list `testcmds`
+Add commands in the `$HOME/minishell_tester/linishell_tester.py` file to the list `testcmds`

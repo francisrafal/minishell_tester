@@ -80,8 +80,8 @@ def test(cmdlist, testnum):
 def main():
     print(bcolors.UNDERLINE + bcolors.BOLD + bcolors.OKBLUE + "\nminishell Tester\n" + bcolors.ENDC)
     print("All results will be compared to your machine's bash")
-    print("Test logs can be found in ./testlogs")
-    os.makedirs("testlogs/", exist_ok=True)
+    print("Test logs can be found in $HOME/minishell_tester/testlogs")
+    os.makedirs(os.path.expandvars("$HOME") + "/testlogs", exist_ok=True)
     if len(sys.argv) > 3:
         test(testcmds[int(sys.argv[3])], int(sys.argv[3]))
     else:
