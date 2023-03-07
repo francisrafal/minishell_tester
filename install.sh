@@ -28,13 +28,12 @@ if [ "$(uname)" != "Darwin" ]; then
 	fi
 fi
 
-
-
 if ! grep "minishell_tester=" $RC_FILE &> /dev/null; then
 	echo "minishell_tester alias not present"
 	echo "Adding alias in file: $RC_FILE"
-	echo -e "\npython3 $HOME/minishell_tester/minishell_tester.py\n" >> $RC_FILE
+	echo -e "\nalias minishell_tester=python3 $HOME/minishell_tester/minishell_tester.py\n" >> $RC_FILE
 fi
 
 exec "$SHELL"
 minishell_tester
+exit
