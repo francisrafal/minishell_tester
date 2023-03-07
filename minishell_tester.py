@@ -64,7 +64,6 @@ def test(cmdlist, testnum):
 
     bash = pexpect.spawn("bash")
     bash_logfile = TESTLOGPATH + str(testnum).zfill(3) + "_testoutput_bash.log"
-    print(bash_logfile)
     bash.logfile_read = open(bash_logfile, "wb")
 
     print(bcolors.HEADER + bcolors.BOLD + f"\nTest {testnum:03d}" + bcolors.ENDC)
@@ -81,7 +80,6 @@ def test(cmdlist, testnum):
     bash.sendline("exit")
 
 def main():
-    print(PROMPT)
     print(bcolors.UNDERLINE + bcolors.BOLD + bcolors.OKBLUE + "\nminishell Tester\n" + bcolors.ENDC)
     print("All results will be compared to your machine's bash")
     print("Test logs can be found in $HOME/minishell_tester/testlogs")
