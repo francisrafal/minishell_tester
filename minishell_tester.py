@@ -4,6 +4,7 @@
 import pexpect
 import sys
 import os
+import subprocess
 
 ### ADD NEW TESTS HERE ###
 TESTCMDS = [
@@ -61,7 +62,11 @@ def get_bash_result(bash, cmd):
     return bash.before.decode()
 
 def test(cmdlist, testnum):
-    minishell = pexpect.spawn(MINISHELLPATH)
+    try:
+        minishell = pexpect.spawn(MINISHELLPATH)
+    except:
+        print("Couldn't open minishell. Make sure to execute the tester in the folder where your Makefile and minishell binary are located.")
+        exit(1)
     minishell_logfile = TESTLOGPATH + str(testnum).zfill(3) + "_testoutput_minishell.log"
     minishell.logfile_read = open(minishell_logfile, "wb")
 
@@ -88,26 +93,36 @@ def print_welcome():
     print("Test logs can be found in $HOME/minishell_tester/testlogs")
 
 def print_usage():
+    print(bcolors.WARNING + "Error: Wrong number of arguments\n" + bcolors.ENDC)
     print("Usage: minishell_tester '<prompt_in_single_quotes>' [testnumber]")
+    print("(Execute in the root directory of your minishell repo)\n")
     print("Example: Execute All Tests")
-    print("minishell_tester 'minishell$ '")
+    print("minishell_tester 'minishell$ '\n")
     print("Example: Execute Only Test No. 5")
     print("minishell_tester 'minishell$ ' 5")
 
 def build_minishell():
-    pexpect.run("pwd")
-    # print(bcolors.HEADER + "Executing your Makefile..." + bcolors.ENDC)
-    # pexpect.run("make")
+    print("")
+    print(bcolors.HEADER + "Executing your Makefile..." + bcolors.ENDC)
+    try:
+        subprocess.run(["make"])
+        print("")
+    except:
+        print("Couldn't execute Makefile. Make sure to execute the tester in the folder where your Makefile and minishell binary are located.")
+        exit(1)
           
 def main():
     if ARGC == 1 or ARGC > 3:
         print_usage()
+        exit(1)
     print_welcome()
     build_minishell()
     os.makedirs(TESTLOGPATH, exist_ok=True)
     if ARGC > 2:
+        print(bcolors.HEADER + "Executing Test..." + bcolors.ENDC)
         test(TESTCMDS[int(sys.argv[2])], int(sys.argv[2]))
     else:
+        print(bcolors.HEADER + "Executing Tests..." + bcolors.ENDC)
         for testnum, cmdlist in enumerate(TESTCMDS):
             test(cmdlist, testnum)
 
