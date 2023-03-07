@@ -30,13 +30,12 @@ if [ "$(uname)" != "Darwin" ]; then
 	fi
 fi
 
-echo "try to add alias in file: $RC_FILE"
+
 
 if ! grep "minishell_tester=" $RC_FILE &> /dev/null; then
 	echo "minishell_tester alias not present"
-	echo "" >> $RC_FILE
-	echo "alias minishell_tester=$HOME/minishell_tester/execute_tests.sh" >> $RC_FILE
-	echo "" >> $RC_FILE
+	echo "Adding alias in file: $RC_FILE"
+	echo -e "\nalias minishell_tester=$HOME/minishell_tester/execute_tests.sh\n" >> $RC_FILE
 fi
 
 exec "$SHELL"
