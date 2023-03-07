@@ -1,3 +1,4 @@
+#!/bin/bash
 if [[ $# < 2 ]] || [[ $# > 3 ]]; then
     echo "Usage: minishell_tester <absolute_path_to_minishell> '<prompt_in_single_quotes>' [testnumber]"
     echo
