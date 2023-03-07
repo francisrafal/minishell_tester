@@ -90,11 +90,10 @@ def test(cmdlist, testnum):
 def print_welcome():
     print(bcolors.UNDERLINE + bcolors.BOLD + bcolors.OKBLUE + "\nminishell Tester\n" + bcolors.ENDC)
     print("All results will be compared to your machine's bash")
-    print("Test logs can be found in $HOME/minishell_tester/testlogs")
 
 def print_usage():
     print(bcolors.WARNING + "Error: Wrong number of arguments\n" + bcolors.ENDC)
-    print("Usage: minishell_tester '<prompt_in_single_quotes>' [testnumber]")
+    print("Usage: minishell_tester '<your_minishell_prompt_in_single_quotes>' [testnumber]")
     print("(Execute in the root directory of your minishell repo)\n")
     print("Example: Execute All Tests")
     print("minishell_tester 'minishell$ '\n")
@@ -110,13 +109,11 @@ def build_minishell():
     except:
         print("Couldn't execute Makefile. Make sure to execute the tester in the folder where your Makefile and minishell binary are located.")
         exit(1)
-          
-def main():
-    if ARGC == 1 or ARGC > 3:
-        print_usage()
-        exit(1)
-    print_welcome()
-    build_minishell()
+
+def print_logfile_info():
+    print(bcolors.WARNING + "Test logs can be found in $HOME/minishell_tester/testlogs" + bcolors.ENDC)
+
+def execute_tests():
     os.makedirs(TESTLOGPATH, exist_ok=True)
     if ARGC > 2:
         print(bcolors.HEADER + "Executing Test..." + bcolors.ENDC)
@@ -125,6 +122,16 @@ def main():
         print(bcolors.HEADER + "Executing Tests..." + bcolors.ENDC)
         for testnum, cmdlist in enumerate(TESTCMDS):
             test(cmdlist, testnum)
+
+          
+def main():
+    if ARGC == 1 or ARGC > 3:
+        print_usage()
+        exit(1)
+    print_welcome()
+    build_minishell()
+    execute_tests()
+    print_logfile_info()
 
 if __name__ == "__main__":
     main()
