@@ -36,10 +36,11 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-PROMPT = sys.argv[1]
 TESTLOGPATH = os.path.expandvars("$HOME") + "/minishell_tester/testlogs/"
 MINISHELLPATH = "./minishell"
 ARGC = len(sys.argv)
+if (ARGC > 1):
+    PROMPT = sys.argv[1]
 
 def referenceresult(minishell, bash_result):
     try:
