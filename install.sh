@@ -36,4 +36,3 @@ fi
 
 exec "$SHELL"
 minishell_tester
-exit
