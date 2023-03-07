@@ -6,7 +6,7 @@ import sys
 import os
 
 ### ADD NEW TESTS HERE ###
-testcmds = [
+TESTCMDS = [
     ["/bin/ls"],
     [""],
     ["/bin/uname"],
@@ -36,11 +36,12 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-prompt = sys.argv[2]
+PROMPT = sys.argv[2]
+TESTLOGPATH = os.path.expandvars("$HOME") + "/minishell_tester/testlogs/"
 
 def referenceresult(minishell, bash_result):
     try:
-        minishell.expect_exact(prompt, timeout=1)
+        minishell.expect_exact(PROMPT, timeout=1)
         if (minishell.before.decode() == bash_result):
             return bcolors.OKGREEN + "OK" + bcolors.ENDC
         return bcolors.FAIL + "KO" + bcolors.ENDC
@@ -48,20 +49,22 @@ def referenceresult(minishell, bash_result):
         return bcolors.FAIL + "KO" + bcolors.ENDC
 
 def get_bash_result(bash, cmd):
-    bash.sendline("export PS1=\"" + prompt + "\"")
-    bash.expect_exact("\r\n" + prompt)
+    bash.sendline("export PS1='" + PROMPT + "'")
+    bash.expect_exact("\r\n")
+    bash.expect_exact(PROMPT)
     bash.sendline(cmd)
     bash.expect_exact(cmd + "\r\n")
-    bash.expect_exact(prompt)
+    bash.expect_exact(PROMPT)
     return bash.before.decode()
 
 def test(cmdlist, testnum):
     minishell = pexpect.spawn(sys.argv[1])
-    minishell_logfile = "testlogs/" + str(testnum).zfill(3) + "_testoutput_minishell.log"
+    minishell_logfile = TESTLOGPATH + str(testnum).zfill(3) + "_testoutput_minishell.log"
     minishell.logfile_read = open(minishell_logfile, "wb")
 
     bash = pexpect.spawn("bash")
-    bash_logfile = "testlogs/" + str(testnum).zfill(3) + "_testoutput_bash.log"
+    bash_logfile = TESTLOGPATH + str(testnum).zfill(3) + "_testoutput_bash.log"
+    print(bash_logfile)
     bash.logfile_read = open(bash_logfile, "wb")
 
     print(bcolors.HEADER + bcolors.BOLD + f"\nTest {testnum:03d}" + bcolors.ENDC)
@@ -78,14 +81,15 @@ def test(cmdlist, testnum):
     bash.sendline("exit")
 
 def main():
+    print(PROMPT)
     print(bcolors.UNDERLINE + bcolors.BOLD + bcolors.OKBLUE + "\nminishell Tester\n" + bcolors.ENDC)
     print("All results will be compared to your machine's bash")
     print("Test logs can be found in $HOME/minishell_tester/testlogs")
-    os.makedirs(os.path.expandvars("$HOME") + "/testlogs", exist_ok=True)
+    os.makedirs(TESTLOGPATH, exist_ok=True)
     if len(sys.argv) > 3:
-        test(testcmds[int(sys.argv[3])], int(sys.argv[3]))
+        test(TESTCMDS[int(sys.argv[3])], int(sys.argv[3]))
     else:
-        for testnum, cmdlist in enumerate(testcmds):
+        for testnum, cmdlist in enumerate(TESTCMDS):
             test(cmdlist, testnum)
 
 if __name__ == "__main__":
