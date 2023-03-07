@@ -16,16 +16,15 @@ cd $HOME
 rm -rf minishell_tester_tmp
 
 cd $HOME/minishell_tester
-
+chmod +x $HOME/minishell_tester/minishell_tester.py
 #pip3 install -r requirements.txt
 
 RC_FILE=$HOME/.zshrc
 
-if [ "$(uname)" != "Darwin" ]; then
-	RC_FILE=$HOME/.bashrc
-	if [[ -f $HOME/.zshrc ]]; then
-		RC_FILE=$HOME/.zshrc
-	fi
+if [ $SHELL == "/bin/bash" ]; then
+RC_FILE="$HOME/.bashrc" 
+elif [ $SHELL == "/bin/zsh" ]; then
+RC_FILE="$HOME/.zshrc"
 fi
 
 if ! grep "minishell_tester=" $RC_FILE &> /dev/null; then
