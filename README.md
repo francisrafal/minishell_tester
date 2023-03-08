@@ -29,4 +29,4 @@ minishell_tester 'minishell$ ' 5
 
 ## Adding Tests
 You can easily add new tests:
-Add new commands you want to test in the `$HOME/minishell_tester/linishell_tester.py` file to the list `TESTCMDS`
+Add new commands you want to test in the `$HOME/minishell_tester/minishell_tester.py` file to the list `TESTCMDS`
