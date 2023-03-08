@@ -33,8 +33,6 @@ if len(response.json()) > 0:
         subprocess.run(["git", "clone", repo_url, local_dir])
         print("Update complete.")
         # Run the updated Python script
-        os.chdir(local_dir)
-        subprocess.run(["python3", "minishell_tester.py"])
     else:
         print("Local repository is up to date")
 else:
