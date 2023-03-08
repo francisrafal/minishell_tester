@@ -13,6 +13,7 @@ This script installs minishell_tester in $HOME/minishell_tester
 
 ## Usage
 ```
+cd <path to your local minishell repo with your Makefile>
 minishell_tester '<your_minishell_prompt_in_single_quotes>' [testnumber]
 ```
 
