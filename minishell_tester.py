@@ -125,6 +125,9 @@ def execute_tests():
 
           
 def main():
+    if "-u" in sys.argv or "--update" in sys.argv:
+    # Use subprocess to run the update script
+        subprocess.run(["python3", os.path.expandvars("$HOME") + "/minishell_tester/check_for_update.py"])
     if ARGC == 1 or ARGC > 3:
         print_usage()
         exit(1)
