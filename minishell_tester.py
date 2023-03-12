@@ -1,6 +1,3 @@
-### How to use:
-### python3 minishell_tester.py <absolute path to your minishell executable>
-
 import pexpect
 import sys
 import os
