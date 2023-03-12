@@ -92,13 +92,15 @@ def print_welcome():
     print("All results will be compared to your machine's bash")
 
 def print_usage():
-    print(bcolors.WARNING + "Error: Wrong number of arguments\n" + bcolors.ENDC)
     print("Usage: minishell_tester '<your_minishell_prompt_in_single_quotes>' [testnumber]")
     print("(Execute in the root directory of your minishell repo)\n")
     print("Example: Execute All Tests")
     print("minishell_tester 'minishell$ '\n")
     print("Example: Execute Only Test No. 5")
-    print("minishell_tester 'minishell$ ' 5")
+    print("minishell_tester 'minishell$ ' 5\n")
+    print("Options:")
+    print("  -h, --help\tprint this help essage")
+    print("  -u, --update\tupdate minishell_tester")
 
 def build_minishell():
     print("")
@@ -128,7 +130,12 @@ def main():
     if "-u" in sys.argv or "--update" in sys.argv:
     # Use subprocess to run the update script
         subprocess.run(["python3", os.path.expandvars("$HOME") + "/minishell_tester/check_for_update.py"])
+        exit(0)
+    if "-h" in sys.argv or "--help" in sys.argv:
+        print_usage()
+        exit(0)
     if ARGC == 1 or ARGC > 3:
+        print(bcolors.WARNING + "Error: Wrong number of arguments\n" + bcolors.ENDC)
         print_usage()
         exit(1)
     print_welcome()
