@@ -30,9 +30,15 @@ if len(response.json()) > 0:
             shutil.rmtree(local_dir)
 
         # Use subprocess to run the git clone command and clone the repository to the local directory
-        subprocess.run(["git", "clone", repo_url, local_dir])
-        print("Update complete.")
-        # Run the updated Python script
+        try:
+            subprocess.run(["git", "clone", repo_url, local_dir], timeout=10)
+            print("Update complete.")
+            # Run the updated Python script
+        except subprocess.TimeoutExpired:
+            # If the clone command times out, retry it once
+            print("Clone command timed out. Retrying...")
+            subprocess.run(["git", "clone", repo_url, local_dir], timeout=10)
+            print("Update complete.")
     else:
         print("Local repository is up to date")
 else:
