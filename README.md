@@ -27,6 +27,17 @@ Example: Execute Only Test No. 5
 minishell_tester 'minishell$ ' 5
 ```
 
+Options:
+```
+  -h, --help    print help
+  -u, --update  update minishell_tester
+```
+
 ## Adding Tests
 You can easily add new tests:
 Add new commands you want to test in the `$HOME/minishell_tester/minishell_tester.py` file to the list `TESTCMDS`
+
+## Contributing
+If you want to help on this project, feel free to look in the Projects tab and comment on an issue that you want to take on.
+Or add a new issue in the Project and describe it.
+Once your done working on it, please open a pull request, so I can review it.
