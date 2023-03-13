@@ -124,9 +124,13 @@ def execute_tests():
 
           
 def main():
+    for arg in sys.argv[1:]:
+    if '$' in arg:
+        os.environ['PROMPT'] = os.path.expandvars(arg)
+        break
     if "-addtest" in sys.argv or "--addtest" in sys.argv:
     # Use subprocess to run the update script
-        subprocess.run(["python3", os.path.expandvars("$HOME") + "/minishell_tester/interactive.py", sys.argv[1]])
+        subprocess.run(["python3", os.path.expandvars("$HOME") + "/minishell_tester/interactive.py", os.environ['PROMPT']])
         exit(0)
     if "-u" in sys.argv or "--update" in sys.argv:
     # Use subprocess to run the update script
