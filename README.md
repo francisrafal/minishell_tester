@@ -34,6 +34,13 @@ Example: Execute Only Test No. 5
 minishell_tester 'minishell$ ' 5
 ```
 
+## Interactive Mode
+To open interactive Mode, in which you can test any command:
+```
+minishell_tester '<your_minishell_prompt_in_single_quotes>' -addtest
+```
+
+
 Options:
 ```
   -h, --help    print help
