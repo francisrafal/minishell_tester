@@ -124,6 +124,10 @@ def execute_tests():
 
           
 def main():
+    if "-addtest" in sys.argv or "--addtest" in sys.argv:
+    # Use subprocess to run the update script
+        subprocess.run(["python3", os.path.expandvars("$HOME") + "/minishell_tester/interactive.py", PROMPT])
+        exit(0)
     if "-u" in sys.argv or "--update" in sys.argv:
     # Use subprocess to run the update script
         subprocess.run(["python3", os.path.expandvars("$HOME") + "/minishell_tester/check_for_update.py"])
@@ -137,6 +141,8 @@ def main():
         exit(1)
     print_welcome()
     build_minishell()
+    #output = subprocess.check_output(["./minishell"])
+    #print(output.decode())
     execute_tests()
     print_logfile_info()
 
