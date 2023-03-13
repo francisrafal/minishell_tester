@@ -87,8 +87,8 @@ def test(cmdlist, testnum):
         minishell.sendline(cmd)
         minishell.expect_exact(cmd + "\r\n")
         print(referenceresult(minishell, bash_result)) 
-	global x
-	x = 0
+    global x
+    x = 0
     minishell.logfile_read.close()
     bash.logfile_read.close()
     minishell.sendline("exit")
