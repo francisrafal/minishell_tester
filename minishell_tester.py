@@ -39,6 +39,7 @@ MINISHELLPATH = "./minishell"
 ARGC = len(sys.argv)
 if (ARGC > 1):
     PROMPT = sys.argv[1]
+x = 0
 
 def referenceresult(minishell, bash_result):
     try:
@@ -50,13 +51,20 @@ def referenceresult(minishell, bash_result):
         return bcolors.FAIL + "KO" + bcolors.ENDC
 
 def get_bash_result(bash, cmd):
-    bash.sendline("export PS1='" + PROMPT + "'")
-    bash.expect_exact("\r\n")
-    bash.expect_exact(PROMPT)
-    bash.sendline(cmd)
-    bash.expect_exact(cmd + "\r\n")
-    bash.expect_exact(PROMPT)
-    return bash.before.decode()
+	global x
+	if (x < 1):
+		bash.sendline("export PS1='" + PROMPT + "'")
+		bash.expect_exact("\r\n")
+		bash.expect_exact(PROMPT)
+		bash.sendline(cmd)
+		bash.expect_exact(cmd + "\r\n")
+		bash.expect_exact(PROMPT)
+		x = 1
+	else:
+		bash.sendline(cmd)
+		bash.expect_exact("\r\n")
+		bash.expect_exact(PROMPT)
+	return bash.before.decode()
 
 def test(cmdlist, testnum):
     try:
@@ -79,6 +87,8 @@ def test(cmdlist, testnum):
         minishell.sendline(cmd)
         minishell.expect_exact(cmd + "\r\n")
         print(referenceresult(minishell, bash_result)) 
+	global x
+	x = 0
     minishell.logfile_read.close()
     bash.logfile_read.close()
     minishell.sendline("exit")
