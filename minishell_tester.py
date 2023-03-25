@@ -37,8 +37,11 @@ class bcolors:
 TESTLOGPATH = os.path.expandvars("$HOME") + "/minishell_tester/testlogs/"
 MINISHELLPATH = "./minishell"
 ARGC = len(sys.argv)
-if (ARGC > 1):
-    PROMPT = sys.argv[1]
+for arg in sys.argv[1:]:
+    if '$' in arg:
+        os.environ['PROMPT'] = os.path.expandvars(arg)
+        PROMPT = os.path.expandvars(arg)
+        break
 
 def referenceresult(minishell, bash_result):
     try:
@@ -124,6 +127,15 @@ def execute_tests():
 
           
 def main():
+    for arg in sys.argv[1:]:
+        if '$' in arg:
+            os.environ['PROMPT'] = os.path.expandvars(arg)
+            PROMPT = os.path.expandvars(arg)
+            break
+    if "-addtest" in sys.argv or "--addtest" in sys.argv:
+    # Use subprocess to run the update script
+        subprocess.run(["python3", os.path.expandvars("$HOME") + "/minishell_tester/interactive.py", os.environ['PROMPT']])
+        exit(0)
     if "-u" in sys.argv or "--update" in sys.argv:
     # Use subprocess to run the update script
         subprocess.run(["python3", os.path.expandvars("$HOME") + "/minishell_tester/check_for_update.py"])
@@ -137,6 +149,8 @@ def main():
         exit(1)
     print_welcome()
     build_minishell()
+    #output = subprocess.check_output(["./minishell"])
+    #print(output.decode())
     execute_tests()
     print_logfile_info()
 

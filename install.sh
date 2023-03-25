@@ -21,10 +21,10 @@ chmod +x $HOME/minishell_tester/minishell_tester.py
 
 RC_FILE=$HOME/.zshrc
 
-if [ $SHELL == "/bin/bash" ]; then
-RC_FILE="$HOME/.bashrc" 
-elif [ $SHELL == "/bin/zsh" ]; then
-RC_FILE="$HOME/.zshrc"
+if [[ "$SHELL" == *"bash"* ]]; then  #  works no matter path is /usr/bin/bash or /bin/bash
+    RC_FILE="$HOME/.bashrc"
+elif [[ "$SHELL" == *"zsh"* ]]; then
+    RC_FILE="$HOME/.zshrc"
 fi
 
 if ! grep "minishell_tester=" $RC_FILE &> /dev/null; then
