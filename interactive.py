@@ -14,6 +14,11 @@ else:
     print("Usage: python3 interactive.py '<your_minishell_prompt_in_single_quotes>'")
     exit(1)
 
+# Check if the minishell file exists
+if not os.path.isfile(MINISHELLPATH):
+    print("Error: minishell file not found in directory")
+    exit(1)
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'

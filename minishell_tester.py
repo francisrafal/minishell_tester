@@ -36,12 +36,6 @@ class bcolors:
 
 TESTLOGPATH = os.path.expandvars("$HOME") + "/minishell_tester/testlogs/"
 MINISHELLPATH = "./minishell"
-ARGC = len(sys.argv)
-for arg in sys.argv[1:]:
-    if '$' in arg:
-        os.environ['PROMPT'] = os.path.expandvars(arg)
-        PROMPT = os.path.expandvars(arg)
-        break
 
 def referenceresult(minishell, bash_result):
     try:
@@ -124,9 +118,14 @@ def execute_tests():
         print(bcolors.HEADER + "Executing Tests..." + bcolors.ENDC)
         for testnum, cmdlist in enumerate(TESTCMDS):
             test(cmdlist, testnum)
-
           
 def main():
+    # Check if the minishell file exists
+    PROMPT = ""
+    ARGC = len(sys.argv)
+    if not os.path.isfile(MINISHELLPATH):
+        print("Error: minishell file not found in directory")
+        exit(1)
     for arg in sys.argv[1:]:
         if '$' in arg:
             os.environ['PROMPT'] = os.path.expandvars(arg)
@@ -134,6 +133,10 @@ def main():
             break
     if "-addtest" in sys.argv or "--addtest" in sys.argv:
     # Use subprocess to run the update script
+        if PROMPT == "":
+            print("Error: No prompt specified")
+            print_usage()  
+            exit(1)
         subprocess.run(["python3", os.path.expandvars("$HOME") + "/minishell_tester/interactive.py", os.environ['PROMPT']])
         exit(0)
     if "-u" in sys.argv or "--update" in sys.argv:
