@@ -1,1 +1,5 @@
 testlogs
+./minishell
+.gitignore
+minishell
+.vscode

@@ -113,9 +113,9 @@ def print_logfile_info():
 
 def execute_tests():
     os.makedirs(TESTLOGPATH, exist_ok=True)
-    if ARGC > 2:
+    if ARGC > 1:
         print(bcolors.HEADER + "Executing Test..." + bcolors.ENDC)
-        test(TESTCMDS[int(sys.argv[2])], int(sys.argv[2]))
+        test(TESTCMDS[int(sys.argv[1])], int(sys.argv[1]))
     else:
         print(bcolors.HEADER + "Executing Tests..." + bcolors.ENDC)
         for testnum, cmdlist in enumerate(TESTCMDS):
@@ -170,8 +170,6 @@ def main():
         exit(0)
     print_welcome()
     build_minishell()
-    #output = subprocess.check_output(["./minishell"])
-    #print(output.decode())
     execute_tests()
     print_logfile_info()
 
