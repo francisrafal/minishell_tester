@@ -27,12 +27,12 @@ minishell_tester [testnumber]
 
 Example: Execute All Tests
 ```
-minishell_tester 'minishell$ '
+minishell_tester
 ```
 
 Example: Execute Only Test No. 5
 ```
-minishell_tester 'minishell$ ' 5
+minishell_tester 5
 ```
 
 ## Interactive Mode
