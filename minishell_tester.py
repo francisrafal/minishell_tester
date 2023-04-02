@@ -121,6 +121,21 @@ def execute_tests():
         for testnum, cmdlist in enumerate(TESTCMDS):
             test(cmdlist, testnum)
 
+def strip_escape_chars(output):
+    """
+    Removes escape characters from the output.
+    """
+    i = 0
+    while i < len(output):
+        if output[i:i+2] == b"\x1b[":
+            j = i + 2
+            while j < len(output) and not output[j:j+1].isalpha():
+                j += 1
+            output = output[:i] + output[j+1:]
+        else:
+            i += 1
+    return output
+
 def get_minishell_prompt(shell_command):
     # start the shell in a pseudo-terminal
     master, slave = pty.openpty()
@@ -128,15 +143,35 @@ def get_minishell_prompt(shell_command):
 
     # read output until we get the shell prompt
     output = b""
-    while not b"$" in output:
+    while not b"$" in output and not b">" in output:
         output += os.read(master, 1024)
 
-    # remove the prompt from the output
-    prompt_start_index = output.index(b"$")
+    # strip escape characters from the output
+    output = strip_escape_chars(output)
+
+    # find the prompt start index, ignoring any escape characters before the $ or >
+    prompt_start_index = -1
+    prompt_chars = [b"$", b">"]
+    for prompt_char in prompt_chars:
+        prompt_start_index = output.find(prompt_char)
+        if prompt_start_index > 0:
+            # backtrack to find the first escape character before the $ or >
+            for i in range(prompt_start_index-1, -1, -1):
+                if output[i:i+2] == b"\x1b[":
+                    continue
+                else:
+                    prompt_start_index = i
+                    break
+            break
+
+    # find the prompt end index
     prompt_end_index = output.find(b"\n", prompt_start_index)
     if prompt_end_index == -1:
         prompt_end_index = len(output)
-    prompt = output[prompt_start_index:prompt_end_index].decode()
+
+    # extract the prompt substring and remove escape characters
+    prompt = output.decode().lstrip()
+    prompt = prompt.replace("\x1b[", "").replace("m", "")
 
     # close the pseudo-terminal
     os.close(master)
@@ -144,14 +179,14 @@ def get_minishell_prompt(shell_command):
 
     return prompt
 
+# Check if the minishell file exists
 if not os.path.isfile(MINISHELLPATH):
     print("Error: minishell file not found in directory")
+    print_usage()
     exit(1)
 PROMPT = get_minishell_prompt([MINISHELLPATH])
 
 def main():
-    # Check if the minishell file exists
-    # get the minishell prompt
     if PROMPT == "":
             print("Error: Could not get the prompt from minishell.")
             print_usage()  
