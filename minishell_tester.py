@@ -144,13 +144,13 @@ def get_minishell_prompt(shell_command):
 
     return prompt
 
+if not os.path.isfile(MINISHELLPATH):
+    print("Error: minishell file not found in directory")
+    exit(1)
 PROMPT = get_minishell_prompt([MINISHELLPATH])
 
 def main():
     # Check if the minishell file exists
-    if not os.path.isfile(MINISHELLPATH):
-        print("Error: minishell file not found in directory")
-        exit(1)
     # get the minishell prompt
     if PROMPT == "":
             print("Error: Could not get the prompt from minishell.")
