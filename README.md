@@ -21,8 +21,9 @@ minishell_tester -u
 ## Usage
 ```
 cd <path to your local minishell repo with your Makefile>
-minishell_tester '<your_minishell_prompt_in_single_quotes>' [testnumber]
+minishell_tester [testnumber]
 ```
+*testnumber is Optional
 
 Example: Execute All Tests
 ```
@@ -37,7 +38,7 @@ minishell_tester 'minishell$ ' 5
 ## Interactive Mode
 To open interactive Mode, in which you can test any command:
 ```
-minishell_tester '<your_minishell_prompt_in_single_quotes>' -addtest
+minishell_tester -addtest
 ```
 
 
