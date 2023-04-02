@@ -1,6 +1,7 @@
 import pexpect
 import sys
 import os
+import pty
 import subprocess
 
 ### ADD NEW TESTS HERE ###
@@ -36,6 +37,7 @@ class bcolors:
 
 TESTLOGPATH = os.path.expandvars("$HOME") + "/minishell_tester/testlogs/"
 MINISHELLPATH = "./minishell"
+ARGC = len(sys.argv)
 
 def referenceresult(minishell, bash_result):
     try:
@@ -86,12 +88,12 @@ def print_welcome():
     print("All results will be compared to your machine's bash")
 
 def print_usage():
-    print("Usage: minishell_tester '<your_minishell_prompt_in_single_quotes>' [testnumber]")
+    print("Usage: minishell_tester [testnumber]")
     print("(Execute in the root directory of your minishell repo)\n")
     print("Example: Execute All Tests")
-    print("minishell_tester 'minishell$ '\n")
+    print("minishell_tester \n")
     print("Example: Execute Only Test No. 5")
-    print("minishell_tester 'minishell$ ' 5\n")
+    print("minishell_tester 5\n")
     print("Options:")
     print("  -h, --help\tprint this help essage")
     print("  -u, --update\tupdate minishell_tester")
@@ -118,26 +120,46 @@ def execute_tests():
         print(bcolors.HEADER + "Executing Tests..." + bcolors.ENDC)
         for testnum, cmdlist in enumerate(TESTCMDS):
             test(cmdlist, testnum)
-          
+
+def get_minishell_prompt(shell_command):
+    # start the shell in a pseudo-terminal
+    master, slave = pty.openpty()
+    p = subprocess.Popen(shell_command, stdin=slave, stdout=slave, stderr=slave)
+
+    # read output until we get the shell prompt
+    output = b""
+    while not b"$" in output:
+        output += os.read(master, 1024)
+
+    # remove the prompt from the output
+    prompt_start_index = output.index(b"$")
+    prompt_end_index = output.find(b"\n", prompt_start_index)
+    if prompt_end_index == -1:
+        prompt_end_index = len(output)
+    prompt = output[prompt_start_index:prompt_end_index].decode()
+
+    # close the pseudo-terminal
+    os.close(master)
+    os.close(slave)
+
+    return prompt
+
+PROMPT = get_minishell_prompt([MINISHELLPATH])
+
 def main():
     # Check if the minishell file exists
-    PROMPT = ""
-    ARGC = len(sys.argv)
     if not os.path.isfile(MINISHELLPATH):
         print("Error: minishell file not found in directory")
         exit(1)
-    for arg in sys.argv[1:]:
-        if '$' in arg:
-            os.environ['PROMPT'] = os.path.expandvars(arg)
-            PROMPT = os.path.expandvars(arg)
-            break
-    if "-addtest" in sys.argv or "--addtest" in sys.argv:
-    # Use subprocess to run the update script
-        if PROMPT == "":
-            print("Error: No prompt specified")
+    # get the minishell prompt
+    if PROMPT == "":
+            print("Error: Could not get the prompt from minishell.")
             print_usage()  
             exit(1)
-        subprocess.run(["python3", os.path.expandvars("$HOME") + "/minishell_tester/interactive.py", os.environ['PROMPT']])
+    os.environ['PROMPT'] = PROMPT
+    if "-addtest" in sys.argv or "--addtest" in sys.argv:
+    # Use subprocess to run the update script
+        subprocess.run(["python3", os.path.expandvars("$HOME") + "/minishell_tester/interactive.py", PROMPT])
         exit(0)
     if "-u" in sys.argv or "--update" in sys.argv:
     # Use subprocess to run the update script
@@ -146,10 +168,6 @@ def main():
     if "-h" in sys.argv or "--help" in sys.argv:
         print_usage()
         exit(0)
-    if ARGC == 1 or ARGC > 3:
-        print(bcolors.WARNING + "Error: Wrong number of arguments\n" + bcolors.ENDC)
-        print_usage()
-        exit(1)
     print_welcome()
     build_minishell()
     #output = subprocess.check_output(["./minishell"])
